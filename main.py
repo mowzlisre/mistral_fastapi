@@ -89,6 +89,9 @@ async def evaluate_batch(request: List[EvaluationRequestItem]):
     for item in request:
         result = evaluateResponse(item)
         item.feedback = result["feedback"]
-        item.points = result["points"]
+        if item.answer != "":
+            item.points = result["points"]
+        else:
+            item.points = 0
 
     return request

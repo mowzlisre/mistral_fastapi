@@ -161,11 +161,15 @@ def extract_json_from_text(text):
     return {"feedback": "Could not parse output.", "points": 0}
 
 def evaluateResponse(item):
+    print("\n")
+    print(f"Evaluating item: {item}")  # Debugging line
     prompt = (
         f"<s>[INST]\n"
         f"You are an expert evaluator AI. Carefully evaluate the provided answer against the given context and question.\n"
         f"\n"
         f"Instructions:\n"
+        f"- First, check if an answer has actually been provided. If the answer is empty, vague, or unrelated, assign 0 points and explain why.\n"
+        f"- Then, check if the provided answer is relevant and correct in the context of the question.\n"
         f"- If the answer is correct, briefly confirm it and highlight the key points that make it accurate.\n"
         f"- If the answer is partially correct or incorrect, explain precisely why, and provide the correct answer based on the context.\n"
         f"- Do not use phrases like 'the user answered'. Be direct, neutral, and professional.\n"
@@ -192,5 +196,6 @@ def evaluateResponse(item):
             top_p=0.9
         )
     generated_text = tokenizer.decode(output_ids[0], skip_special_tokens=False)
-    output_json_raw = generated_text.split("</s>")[-2].strip()    
+    output_json_raw = generated_text.split("</s>")[-2].strip()  
+    print(f"Raw output: {output_json_raw}")  # Debugging line  
     return json.loads(output_json_raw)
